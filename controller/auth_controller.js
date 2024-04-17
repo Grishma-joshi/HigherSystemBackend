@@ -83,7 +83,20 @@ const login = async (req, res) => {
         }
     }
 }
+const service= async (req, res) => {
+    try {
+      const { name, email, phoneNumber, service, url, enquery } = req.body;
+  
+      // Insert data into the SERVICES table
+      const queryText = 'INSERT INTO SERVICES (Name, Email, PhoneNumber, Service, URL, enquery) VALUES ($1, $2, $3, $4, $5, $6)';
+      await pool.query(queryText, [name, email, phoneNumber, service, url, enquery]);
+  
+      res.status(201).json({ message: 'Service added successfully' });
+    } catch (error) {
+      console.error('Error inserting data:', error);
+      res.status(500).json({ error: 'Error inserting data' });
+    }
+  }
 
-
-module.exports = { register,login };
+module.exports = { register,login,service };
 
