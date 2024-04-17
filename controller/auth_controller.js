@@ -1,5 +1,5 @@
 const pool = require("../config/postgres");
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 const generateNumericValue = require('../generate/numeric');
 
 
@@ -9,7 +9,7 @@ const register = async (req, res) => {
         const { firstName, lastName, email, phone, password } = req.body;
 
         // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // const hashedPassword = await bcrypt.hash(password, 10);
 
         connection = await pool.connect();
         const check = 'SELECT * FROM signup WHERE g_id = $1';
@@ -31,7 +31,7 @@ const register = async (req, res) => {
         }
 
         const query = 'INSERT INTO signup(g_id,firstName, lastName, email, phoneNumber, password) VALUES ($1, $2, $3, $4, $5,$6)';
-        const values = [aid,firstName, lastName, email, phone, hashedPassword];
+        const values = [aid,firstName, lastName, email, phone, password];
         await connection.query(query, values);
 
         return res.status(201).send({ message: 'User created successfully' });
@@ -62,15 +62,15 @@ const login = async (req, res) => {
             return res.status(404).send({ message: 'User not found' });
         }
 
-        const user = userResult.rows[0];
+        // const user = userResult.rows[0];
 
         // Check if the provided password matches the hashed password in the database
-        const passwordMatch = await bcrypt.compare(password, user.password);
+        // const passwordMatch = await bcrypt.compare(password, user.password);
 
-        if (!passwordMatch) {
-            // Passwords do not match
-            return res.status(401).send({ message: 'Invalid password' });
-        }
+        // if (!passwordMatch) {
+        //     // Passwords do not match
+        //     return res.status(401).send({ message: 'Invalid password' });
+        // }
 
         // Passwords match, user is authenticated
         return res.status(200).send({ message: 'Login successful', user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email } });
